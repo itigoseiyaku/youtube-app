@@ -1,4 +1,6 @@
-import type { StorybookConfig } from '@storybook/vue3-vite'
+import type { StorybookConfig } from '@storybook/vue3-vite';
+import { mergeConfig } from 'vite';
+
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
@@ -8,10 +10,23 @@ const config: StorybookConfig = {
   ],
   framework: {
     name: '@storybook/vue3-vite',
-    options: {}
+    options: {
+      builder: {
+        viteConfigPath: '../vite.config.ts'
+      }
+    }
   },
   docs: {
     autodocs: 'tag'
+  },
+  async viteFinal(config) {
+    // Merge custom configuration into the default config
+    return mergeConfig(config, {
+      // Add dependencies to pre-optimization
+      optimizeDeps: {
+        include: ['storybook-dark-mode']
+      }
+    });
   }
-}
-export default config
+};
+export default config;
