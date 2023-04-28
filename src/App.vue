@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import AppBar from '@/components/Layout/AppBar.vue';
-import NavigationDrawer from '@/components/Layout/NavigationDrawer.vue';
+import AppBar from '@/views/Layout/AppBar.vue';
+import NavigationDrawer from '@/views/Layout/NavigationDrawer.vue';
 </script>
 
 <template>

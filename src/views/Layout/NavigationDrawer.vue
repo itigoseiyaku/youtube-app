@@ -1,5 +1,11 @@
+<script setup lang="ts">
+import { useNavigationDrawerStore } from '@/stores/navigationDrawer';
+
+const store = useNavigationDrawerStore();
+</script>
+
 <template>
-  <v-navigation-drawer permanent>
+  <v-navigation-drawer :model-value="store.isOpen" permanent>
     <v-list nav>
       <v-list-item :to="{ name: 'home' }" prepend-icon="mdi-home" title="home"></v-list-item>
       <v-list-item
