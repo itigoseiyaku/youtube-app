@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterView } from 'vue-router';
+import AppBar from '@/components/Layout/AppBar.vue';
+import NavigationDrawer from '@/components/Layout/NavigationDrawer.vue';
 </script>
 
 <template>
-  <v-layout>
-    <v-app-bar color="grey-lighten-2"></v-app-bar>
-    <v-navigation-drawer color="grey-darken-2" permanent>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink></v-navigation-drawer
-    >
+  <v-app>
+    <AppBar />
+    <NavigationDrawer />
     <v-main>
       <RouterView />
     </v-main>
-  </v-layout>
+  </v-app>
 </template>
