@@ -1,11 +1,12 @@
-import { ref, computed } from 'vue';
+import { readonly, ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useGoogleUserInfo } from './googleUserInfo';
+import { useStorage } from '@vueuse/core';
 
 export const useGoogleAccessTokenStore = defineStore('auth/googleAccessToken', () => {
-  const accessToken = ref<string | null>(null);
+  const accessToken = useStorage('access_token', '', localStorage);
 
-  const isLogin = computed<boolean>(() => !!accessToken.value);
+  const isLogin = ref<boolean>(false);
 
   /** GoogleにOAuth認証でログインする */
   const loginWithGoogle = () => {
@@ -25,34 +26,45 @@ export const useGoogleAccessTokenStore = defineStore('auth/googleAccessToken', (
 
   /** ログアウトする */
   const logout = () => {
+    isLogin.value = false;
     accessToken.value = null;
+  };
+
+  const loginCallBack = async (callbackParam: Map<string, string>) => {
+    logout();
+
+    const callBackAccessToken = callbackParam.get('access_token');
+
+    if (!callBackAccessToken) {
+      return;
+    }
+
+    accessToken.value = callBackAccessToken;
+
+    await checkLogin();
   };
 
   /**
    * accessTokenの登録
-   * @param callbackParam callbackで得られたaccessToken
+   * @param accessToken
    * @returns true: 成功, false: 失敗
    */
-  const setAccessToken = async (callbackParam: Map<string, string>) => {
-    logout();
-
-    const callBackAccessToken = callbackParam.get('access_token');
-    if (!callBackAccessToken) {
-      return;
-    }
-    const googleUserInfoStore = useGoogleUserInfo();
-
+  const checkLogin = async () => {
     // 取得できたかどうかで判断
-    await googleUserInfoStore.fetch({ access_token: callBackAccessToken, force: true });
+    const googleUserInfoStore = useGoogleUserInfo();
+    await googleUserInfoStore.fetchUserData({ force: true });
+
     if (googleUserInfoStore.userInfo) {
-      accessToken.value = callBackAccessToken;
+      isLogin.value = true;
     }
   };
 
   return {
-    isLogin,
+    isLogin: readonly(isLogin),
     logout,
     loginWithGoogle,
-    setAccessToken
+    loginCallBack,
+    checkLogin,
+    accessToken: readonly(accessToken)
   };
 });

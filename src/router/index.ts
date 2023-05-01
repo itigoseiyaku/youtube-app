@@ -33,13 +33,20 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, _) => {
+let alreadyRestore = false;
+router.beforeEach(async (to, _) => {
+  const googleAccessToken = useGoogleAccessTokenStore();
+  // アクセストークンを復元する;
+  if (!alreadyRestore) {
+    alreadyRestore = true;
+    await googleAccessToken.checkLogin();
+  }
+
   if (to.meta.requiredLogin === false) {
     return true;
   }
 
-  const authStore = useGoogleAccessTokenStore();
-  if (authStore.isLogin) {
+  if (googleAccessToken.isLogin) {
     return true;
   }
   return { name: 'loginPage' };

@@ -1,6 +1,6 @@
 import { ref, readonly } from 'vue';
 import { defineStore } from 'pinia';
-import { useFetch } from '@vueuse/core';
+import useGoogleApiFetch from './googleApiFetch';
 
 interface UserInfo {
   family_name: string;
@@ -26,32 +26,27 @@ interface UserInfoResponse {
 export const useGoogleUserInfo = defineStore('auth/googleUserInfo', () => {
   const userInfo = ref<UserInfo | null>(null);
 
-  const fetch = async (params: { access_token?: string; force?: boolean }) => {
-    userInfo.value = null;
+  const { data, error, execute, isFetching } = useGoogleApiFetch<UserInfoResponse>(
+    '/oauth2/v2/userinfo',
+    {
+      immediate: false,
+      refetch: false
+    }
+  );
 
-    if (!params.access_token) {
+  const fetchUserData = async (params: { force?: boolean }) => {
+    if (isFetching.value) {
       return;
     }
+
+    userInfo.value = null;
 
     if (!(params.force || !userInfo.value)) {
       return;
     }
 
-    const { data, error } = await useFetch<UserInfoResponse>(
-      'https://www.googleapis.com/oauth2/v2/userinfo',
-      {
-        async beforeFetch({ options }) {
-          options.headers = {
-            ...options.headers,
-            Authorization: `Bearer ${params.access_token}`
-          };
+    await execute();
 
-          return {
-            options
-          };
-        }
-      }
-    );
     if (error.value || data.value == null) {
       return;
     }
@@ -60,7 +55,7 @@ export const useGoogleUserInfo = defineStore('auth/googleUserInfo', () => {
   };
 
   return {
-    fetch,
+    fetchUserData,
     userInfo: readonly(userInfo)
   };
 });

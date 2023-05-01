@@ -8,8 +8,9 @@ const params = new URLSearchParams(hashString);
 
 const router = useRouter();
 const googleAuthStore = useGoogleAccessTokenStore();
+
 onMounted(async () => {
-  await googleAuthStore.setAccessToken(new Map(params));
+  await googleAuthStore.loginCallBack(new Map(params));
 
   if (googleAuthStore.isLogin) {
     router.replace({ name: 'home' });
