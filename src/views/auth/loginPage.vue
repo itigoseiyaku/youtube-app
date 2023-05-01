@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useGoogleAccessTokenStore } from '@/stores/auth/googleAccessToken';
+import NoLoggedInLayoutCopy from '@/views/Layout/NoLoggedInLayout.vue';
 
 const authStore = useGoogleAccessTokenStore();
 
@@ -9,7 +10,7 @@ const onClickGoogleLogin = () => {
 </script>
 
 <template>
-  <v-container>
+  <NoLoggedInLayoutCopy>
     <v-btn @click="onClickGoogleLogin">Login with Google</v-btn>
-  </v-container>
+  </NoLoggedInLayoutCopy>
 </template>

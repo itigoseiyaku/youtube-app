@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue';
+import HelloWorld from '@/components/HelloWorld.vue';
+import LoggedInLayout from '@/views/Layout/LoggedInLayout.vue';
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <LoggedInLayout>
+    <HelloWorld msg="HomePage" />
+  </LoggedInLayout>
 </template>

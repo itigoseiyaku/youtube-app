@@ -2,6 +2,7 @@
 import { useGoogleAccessTokenStore } from '@/stores/auth/googleAccessToken';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import NoLoggedInLayoutCopy from '@/views/Layout/NoLoggedInLayout.vue';
 
 const hashString = location.hash.replace(/^#/, '');
 const params = new URLSearchParams(hashString);
@@ -22,9 +23,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="d-flex align-center justify-center loading" style="width: 100%; height: 100%">
-    <v-progress-circular indeterminate size="64" color="primary" />
-  </div>
+  <NoLoggedInLayoutCopy>
+    <div class="d-flex align-center justify-center loading" style="width: 100%; height: 100%">
+      <v-progress-circular indeterminate size="64" color="primary" />
+    </div>
+  </NoLoggedInLayoutCopy>
 </template>
 
 <style scoped>
