@@ -29,6 +29,12 @@ const router = createRouter({
       name: 'googleCallback',
       component: () => import('@/views/auth/GoogleCallback.vue'),
       meta: { requiredLogin: false }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: {
+        name: 'home'
+      }
     }
   ]
 });
