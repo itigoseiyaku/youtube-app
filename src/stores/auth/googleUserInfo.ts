@@ -32,7 +32,9 @@ export const useGoogleUserInfo = defineStore('auth/googleUserInfo', () => {
       immediate: false,
       refetch: false
     }
-  );
+  )
+    .get()
+    .json();
 
   const fetchUserData = async (params: { force?: boolean }) => {
     if (isFetching.value) {

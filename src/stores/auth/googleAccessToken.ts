@@ -2,6 +2,7 @@ import { readonly, ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useGoogleUserInfo } from './googleUserInfo';
 import { useStorage } from '@vueuse/core';
+import { useRouter } from 'vue-router';
 
 export const useGoogleAccessTokenStore = defineStore('auth/googleAccessToken', () => {
   const accessToken = useStorage('access_token', '', localStorage);
@@ -28,6 +29,9 @@ export const useGoogleAccessTokenStore = defineStore('auth/googleAccessToken', (
   const logout = () => {
     isLogin.value = false;
     accessToken.value = null;
+
+    const router = useRouter();
+    router.push({ name: 'loginPage' });
   };
 
   const loginCallBack = async (callbackParam: Map<string, string>) => {
